@@ -78,6 +78,24 @@ public class DefaultEventManagerTest
     }
 
     /**
+     * Verifies the "listen to everything" feature from Task 2
+     */
+    @Test
+    public void testListenToAllListenerReceivesAnyEvent()
+    {
+        EventListenerMock listenToAll = new EventListenerMock(new Class[]{});
+        eventManager.registerListener("catch.all", listenToAll);
+
+        eventManager.publishEvent(new SimpleEvent(this));
+        assertTrue(listenToAll.isCalled());
+
+        listenToAll.resetCalled();
+
+        eventManager.publishEvent(new SubEvent(this));
+        assertTrue(listenToAll.isCalled());
+    }
+
+    /**
      * Registering duplicate keys on different listeners should only fire the most recently added.
      */
     @Test
