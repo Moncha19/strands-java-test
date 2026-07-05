@@ -31,18 +31,39 @@ public class DefaultEventManager implements EventManager
         sendEventTo(event, calculateListeners(event.getClass()));
     }
 
+    // private Collection calculateListeners(Class eventClass)
+    // {
+    //     Collection classListeners = (Collection) listenersByClass.get(eventClass);
+
+    //     // Merge ("listen to everything") listeners
+    //     if (listenToAllListeners.isEmpty())
+    //         return classListeners;
+
+    //     Collection result = new ArrayList();
+    //     if (classListeners != null)
+    //         result.addAll(classListeners);
+    //     result.addAll(listenToAllListeners);
+    //     return result;
+    // }
+
     private Collection calculateListeners(Class eventClass)
     {
-        Collection classListeners = (Collection) listenersByClass.get(eventClass);
-
-        // Merge ("listen to everything") listeners
-        if (listenToAllListeners.isEmpty())
-            return classListeners;
-
         Collection result = new ArrayList();
-        if (classListeners != null)
-            result.addAll(classListeners);
+
+        // Walk up the class hierarchy: eventClass, its superclass, its superclass's superclass...
+        Class currentClass = eventClass;
+        while (currentClass != null)
+        {
+            Collection classListeners = (Collection) listenersByClass.get(currentClass);
+            if (classListeners != null)
+                result.addAll(classListeners);
+
+            currentClass = currentClass.getSuperclass();
+        }
+
+        // Merge in wildcard listeners from Task 2
         result.addAll(listenToAllListeners);
+
         return result;
     }
 

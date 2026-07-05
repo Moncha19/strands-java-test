@@ -36,13 +36,23 @@ public class DefaultEventManagerTest
     }
 
     //added
+    // @Test
+    // public void testSuperclassListenerDoesNotReceiveSubclassEvent()
+    // {
+    //     EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
+    //     eventManager.registerListener("some.key", eventListenerMock);
+    //     eventManager.publishEvent(new SubEvent(this));
+    //     assertFalse(eventListenerMock.isCalled());
+    // }
+
+    // Task 3: listener for SimpleEvent should also catch SubEvent (its subclass)
     @Test
-    public void testSuperclassListenerDoesNotReceiveSubclassEvent()
+    public void testSuperclassListenerDoesReceiveSubclassEvent()
     {
         EventListenerMock eventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
         eventManager.registerListener("some.key", eventListenerMock);
         eventManager.publishEvent(new SubEvent(this));
-        assertFalse(eventListenerMock.isCalled());
+        assertTrue(eventListenerMock.isCalled());
     }
 
     @Test
